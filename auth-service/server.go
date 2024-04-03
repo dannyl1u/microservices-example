@@ -27,24 +27,30 @@ type authService struct {
 }
 
 func (s *authService) RegisterUser(context context.Context, regForm *pb.UserRegistrationForm) (*pb.Token, error) {
-	if len(regForm.Name) == 0 {
-		return nil, status.Error(codes.InvalidArgument, "name can't be blank")
-	}
+    if len(regForm.Name) == 0 {
+        return nil, status.Error(codes.InvalidArgument, "name can't be blank")
+    }
 
-	if len(regForm.Username) == 0 {
-		return nil, status.Error(codes.InvalidArgument, "username can't be blank")
-	}
+    if len(regForm.Username) == 0 {
+        return nil, status.Error(codes.InvalidArgument, "username can't be blank")
+    }
 
-	if len(regForm.Password) <= 5 {
-		return nil, status.Error(codes.InvalidArgument, "password should have atleast 6 characters")
-	}
+    if len(regForm.Password) <= 5 {
+        return nil, status.Error(codes.InvalidArgument, "password should have atleast 6 characters")
+    }
 
-	newToken := util.GenerateToken()
-	result := s.db.Create(&DB.User{Name: regForm.Name, Password: regForm.Password, Username: regForm.Username, Token: newToken})
-	if result.Error != nil {
-		return nil, status.Error(codes.AlreadyExists, "username already exists")
-	}
-	return &pb.Token{Token: newToken}, nil
+    var count int64
+    s.db.Model(&DB.User{}).Where("username = ?", regForm.Username).Count(&count)
+    if count > 0 {
+        return nil, status.Error(codes.AlreadyExists, "username already exists")
+    }
+
+    newToken := util.GenerateToken()
+    result := s.db.Create(&DB.User{Name: regForm.Name, Password: regForm.Password, Username: regForm.Username, Token: newToken})
+    if result.Error != nil {
+        return nil, status.Error(codes.Internal, "failed to create user")
+    }
+    return &pb.Token{Token: newToken}, nil
 }
 
 func (s *authService) LoginUser(context context.Context, creds *pb.UserCredentials) (*pb.Token, error) {
