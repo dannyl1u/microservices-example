@@ -19,7 +19,7 @@ function displayInfoToast(message) {
     });
 }
 
-const API_BASE_URL = 'http://localhost:8000/';
+const API_BASE_URL = 'http://4.255.90.97:8000/';
 
 function logout() {
     localStorage.removeItem('token');
