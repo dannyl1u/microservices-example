@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: api-service-server
-          image: todo-app-api-service:v1
+          image: dannyjialiliu/todo-app-api-service:latest
           ports:
             - containerPort: 8000
           env:

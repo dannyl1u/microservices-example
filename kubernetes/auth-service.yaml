@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: auth-service-server
-          image: todo-app-auth-service:v1
+          image: dannyjialiliu/todo-app-auth-service:latest1
           ports:
             - containerPort: 3005
           env:

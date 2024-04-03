@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-database-deployment
+  namespace: todo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-database
+  template:
+    metadata:
+      labels:
+        app: auth-database
+    spec:
+      containers:
+      - name: auth-database
+        image: postgres:11
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: auth-db-storage
+      volumes:
+      - name: auth-db-storage
+        persistentVolumeClaim:
+          claimName: azure-disk-pvc

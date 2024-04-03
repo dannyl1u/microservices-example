@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: todo-service-server
-          image: todo-app-todo-service:v1
+          image: dannyjialiliu/todo-app-todo-service:latest
           ports:
             - containerPort: 3006
           env:
